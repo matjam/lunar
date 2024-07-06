@@ -21,14 +21,19 @@ func (EntitySchemaVersion) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).Comment("The ID of the entity schema version."),
 		field.JSON("schema", map[string]interface{}{}).Comment("The schema of the entity schema version."),
 		field.Time("created_at").Immutable().Comment("The time the entity schema version was created. Note that this is not the time the schema was created, but the time the version was created."),
+		field.String("note").Optional().Comment("A note about the entity schema version."),
 	}
 }
 
 // Edges of the EntitySchemaVersion.
 func (EntitySchemaVersion) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("entityschema", EntitySchema.Type).Ref("versions").Unique().Comment("The entity schema that this version belongs to."),
-		edge.To("entityschemaversions", Entity.Type).Comment("The entities that conform to this version of the schema."),
+		edge.To("created_by", User.Type).Unique().Comment("The user who created the entity schema version."),
+		edge.From("entityschema", EntitySchema.Type).
+			Ref("entityschemaversions").
+			Unique().
+			Comment("The schema that this version is for."),
+		edge.To("entities", Entity.Type).Comment("The entities that conform to this version of the schema."),
 	}
 }
 

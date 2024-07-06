@@ -29,7 +29,9 @@ func (User) Fields() []ent.Field {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("created_by", User.Type).Unique(),
+		edge.To("updated_by", User.Type).Unique(),
+		edge.To("deleted_by", User.Type).Unique(),
 		edge.To("roles", Role.Type),
-		edge.To("collections", Collection.Type),
+		edge.To("sessions", Session.Type),
 	}
 }
